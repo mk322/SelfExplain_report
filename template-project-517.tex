@@ -37,9 +37,9 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-  Author 1, Author 2, Author 3 \\ % write a list of authors
-  Affiliation \\
- \texttt{\{author1, author2, author3\}@uw.edu} \\ % write your email
+  Murray Kang, Xuweiyi Chen, Hao Luo \\ % write a list of authors
+  University of Washington \\
+ \texttt{\{haoqik, author2, author3\}@uw.edu} \\ % write your email
 }
 
 \begin{document}
@@ -52,25 +52,28 @@
 
 \section*{\centering Reproducibility Summary}
 
-This summary section should be less than one page.
 
 \subsection*{Scope of Reproducibility}
 
-State the main claim of the original paper you are trying to reproduce. We recommend picking the central claim of the paper. 
+We chose to reproduce the model SelfExplain which is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. There are two speical layers added in this model, a globally interpretable layer and a locally interpretable layer. In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediciton to quantify the contributions.
 
 \subsection*{Methodology}
+
+*** First of all, we used the author's code to train the model. 
 
 Briefly describe what you did and which resources did you use. E.g., did you use author's code, did you reimplement parts of the pipeline, how much time did it take to produce the results, what hardware you were using and how long it took to train/evaluate. 
 
 \subsection*{Results}
 
-Start with your overall conclusion---where was your study successful and where not successful? Be specific and use precise language, e.g.,``we reproduced the accuracy to within 1\% of reported value, that upholds the paper's conclusion that it performs much better than baselines.'' Getting exactly the same number is in most cases infeasible, so you'll need to use your judgment to decide if your results support the original claim of the paper. 
+*** Start with your overall conclusion---where was your study successful and where not successful? Be specific and use precise language, e.g.,``we reproduced the accuracy to within 1\% of reported value, that upholds the paper's conclusion that it performs much better than baselines.'' Getting exactly the same number is in most cases infeasible, so you'll need to use your judgment to decide if your results support the original claim of the paper. 
 
 \subsection*{What was Easy}
 
-Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
+*** Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
 
 \subsection*{What was Difficult}
+
+*** Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatiablity of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
 
 Describe which parts of your reproduction study were difficult or took much more time than you expected. Perhaps the data was not available and you couldn't verify some experiments, or the author's code was broken and had to be debugged first. Or, perhaps some experiments just take too much time/resources to run and you couldn't verify them. The purpose of this section is to indicate to the reader which parts of the original paper are either difficult to reuse, or require a significant amount of work and resources to verify. 
 
