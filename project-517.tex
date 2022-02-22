@@ -59,21 +59,21 @@ We chose to reproduce the model SelfExplain which is a novel self-explaining mod
 
 \subsection*{Methodology}
 
-*** First of all, we used the author's code to train the model. 
+** First of all, we used the author's code to train the model. 
 
 Briefly describe what you did and which resources did you use. E.g., did you use author's code, did you reimplement parts of the pipeline, how much time did it take to produce the results, what hardware you were using and how long it took to train/evaluate. 
 
 \subsection*{Results}
 
-*** Start with your overall conclusion---where was your study successful and where not successful? Be specific and use precise language, e.g.,``we reproduced the accuracy to within 1\% of reported value, that upholds the paper's conclusion that it performs much better than baselines.'' Getting exactly the same number is in most cases infeasible, so you'll need to use your judgment to decide if your results support the original claim of the paper. 
+Start with your overall conclusion---where was your study successful and where not successful? Be specific and use precise language, e.g.,``we reproduced the accuracy to within 1\% of reported value, that upholds the paper's conclusion that it performs much better than baselines.'' Getting exactly the same number is in most cases infeasible, so you'll need to use your judgment to decide if your results support the original claim of the paper. 
 
 \subsection*{What was Easy}
 
-*** Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
+Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
 
 \subsection*{What was Difficult}
 
-*** Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatiablity of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
+* Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatiablity of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
 
 Describe which parts of your reproduction study were difficult or took much more time than you expected. Perhaps the data was not available and you couldn't verify some experiments, or the author's code was broken and had to be debugged first. Or, perhaps some experiments just take too much time/resources to run and you couldn't verify them. The purpose of this section is to indicate to the reader which parts of the original paper are either difficult to reuse, or require a significant amount of work and resources to verify. 
 
@@ -86,10 +86,14 @@ Briefly describe how much (if any contact) you had with the original authors.
 % For specific grading rubrics, please see the project instructions.
 
 \section{Introduction}
+
+** SelfExplain is a neural text classifier that can self explains the text prediction using phrase-base concepts.
+
 A  few  sentences  placing  the  work  in  context. Limit it to a few paragraphs at most; since your report is on reproducing a piece of work, you don’t have to motivate that work. However, it should be clear enough what the original paper is about and what its contributions are.
 
 \section{Scope of Reproducibility}
 
+*** 
 Explain the claims from the paper you picked for the reproduction study and briefly motivate your choice. We recommend picking the claim that is the central contribution of the paper. To find what this contribution is, try to summarize the most important result of the paper in 1--2 sentences, e.g., ``This paper introduces a new activation function X that outperforms a similar activation function Y on tasks Z, V, and W.'' 
 
 Make the scope as specific as possible. It should be something that can be supported or rejected by your data. For example, this scope is too broad and lacks precise outcome (what is ``strong performance''?): ``Contextual embedding models have shown strong performance on a number of tasks across NLP. We will run experiments evaluating two types of contextual embedding models on datasets X, Y, and Z.''
@@ -99,6 +103,7 @@ This scope is better because it's more specific and has an outcome that can be e
 \subsection{Addressed Claims from the Original Paper} \label{claims}
 
 Clearly enumerate the claims you are testing:
+***
 \begin{enumerate}
     \item Claim 1
     \item Claim 2
@@ -108,15 +113,23 @@ Clearly enumerate the claims you are testing:
 
 \section{Methodology}
 
+** We used the author's code.
+
 This section is to explain your approach---did you use the author's code, did you aim to reimplement the approach from the paper description? Summarize the resources (code, documentation, GPUs) that you used. 
 
 \subsection{Model Descriptions}
 
-SelfExplain is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. In the SelfExplain architecture, firstly, there is a transformer encoder that encoded the input and its relative non-terminals. Next, it used three layers after regularization to make prediction, a linear layer, a globally interpretable layer and a locally interpretable layer. In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. To be more specific, firstly, there is a concept store that contains all concepts in the training set, in which each candidata q_k is represented by a mean pooled representation of its constituent words, q_k = /sum_{/w /in q_k}{e(/w)} / /len(q_k). In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediciton to quantify the contributions. 
+**
+SelfExplain is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. In the SelfExplain architecture, firstly, there is a transformer encoder that encoded the input and its relative non-terminals. Next, it used three layers after regularization to make prediction, a linear layer, a globally interpretable layer and a locally interpretable layer. In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. To be more specific, firstly, there is a concept store that contains all concepts in the training set, in which each candidate $q_k$ is represented by a mean pooled representation of its constituent words, $q_k = \frac{\sum_{w \in q_k}{e(w)}}{len(q_k)}  $. In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Since the model is a finetuned for downstream task, all candidate representation $q_k$ are re-indexed after every fixed number of steps. 
+Next, the model uses the Maximum Inner Product Search (MIPS) to retrieve the top $K$ influenced concepts ${q_k}_{1:K}$ from the concept store based on the cosine similarity function: 
+$$d(x, Q) = \frac{\mathbf{x} \cdot q}{ \|\mathbf{x}\| \|q\|}  \qquad  \forall q \in Q$$
+After identifying the influential concepts from the training data, the model learned it end-to-end via back propagation. Our inner product model for this globally interpretable layer is defined as follows:
+$$  p(q|\mathbf{x}_i) = \frac{exp(d(\mathbf{u}_\mathbb{S}, q))}{\sum_{q'} exp(d(\mathbf{u}_\mathbb{S}, q'))}$$
 
 Describe the models used in the original paper, including the architecture, learning objective and the number of parameters.
 
 \subsection{Datasets}
+* 
 We used SST-5 datasets fine-grained classification dataset from the Stanform NLP website.
 
 \subsection{Hyperparameters}
@@ -129,6 +142,7 @@ Describe whether you use the existing code or write your own code, with the link
 Explain how you ran your experiments, e.g. the CPU/GPU resources and provide the link to your code and notebooks. 
 
 \subsection{Computational Requirements}
+***
 Provide information on computational requirements for each of your experiments. For example, the number of CPU/GPU hours and memory requirements.
 Mention both of your estimation before running the experiments and actual resources took for reproducing the experiments. 
 You'll need to think about this ahead of time, and write your code in a way that captures this information so you can later add it to this section. 
