@@ -111,10 +111,13 @@ Clearly enumerate the claims you are testing:
 This section is to explain your approach---did you use the author's code, did you aim to reimplement the approach from the paper description? Summarize the resources (code, documentation, GPUs) that you used. 
 
 \subsection{Model Descriptions}
+
+SelfExplain is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. In the SelfExplain architecture, firstly, there is a transformer encoder that encoded the input and its relative non-terminals. Next, it used three layers after regularization to make prediction, a linear layer, a globally interpretable layer and a locally interpretable layer. In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. To be more specific, firstly, there is a concept store that contains all concepts in the training set, in which each candidata q_k is represented by a mean pooled representation of its constituent words, q_k = /sum_{/w /in q_k}{e(/w)} / /len(q_k). In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediciton to quantify the contributions. 
+
 Describe the models used in the original paper, including the architecture, learning objective and the number of parameters.
 
 \subsection{Datasets}
-Describe the datasets you used and how you obtained them. 
+We used SST-5 datasets fine-grained classification dataset from the Stanform NLP website.
 
 \subsection{Hyperparameters}
 Describe how you set the hyperparameters and what was the source for their value (e.g., paper, code, or your guess). 
