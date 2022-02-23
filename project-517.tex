@@ -152,7 +152,7 @@ After identifying the influential concepts from the training data, the model lea
 $$  p(q|\mathbf{x}_i) = \frac{exp(d(\mathbf{u}_\mathbb{S}, q))}{\sum_{q'} exp(d(\mathbf{u}_\mathbb{S}, q'))}$$
 
 In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Firstly, it computes a local relevance score for all input concepts from a sample. For each non-terminal $nt_j$, there is a score that qualifies the contribution of each $nt_j$ to the label and then the model compared it to the contribution of the root node $nt_\mathbb{s}$. Finally, it chose the phrases $\mathbf{C}_L$ that contributed most to explain the predictions locally. To be more specific, given a encoder, LIL computes the contribution from $nt_j$ to the final prediction, and then it built a representation of the input without contribution of phrase $nt_j$ and use it to score labels:
-$$t_j = g(\mathbf{u}_j) - g(\mathbf{u}_\mathbb{s})$$
+$$t_j = g(\mathbf{u}_j) - g(\mathbf{u}_\mathbb{S})$$
 $$s_j = softmax(\mathbf{W_v} \times t_j + \mathbf{b}_v)$$
 where g is a $relu$ activation function, $t_j \in \mathbb{R}^D$, $s_j \in \mathbb{R}^C$, $\mathbf{W}_v \in \mathbb{R}^{D \times C}$, $s_j$ is a label distribution without the contribution of $nt_j$. \\
 Given this, the relevance score $\mathbf{r}_j$ is the given by the difference between the classifier score fore the predicted label based on entire input and the label score based on the input without $nt_j$:
