@@ -1,11 +1,11 @@
 \documentclass{article}
 
 % if you need to pass options to natbib, use, e.g.:
-%     \PassOptionsToPackage{numbers, compress}{natbib}
+\PassOptionsToPackage{numbers, compress}{natbib}
 % before loading neurips_2019
 
 % ready for submission
-% \usepackage{neurips_2019}
+%\usepackage{neurips_2019}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -26,7 +26,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
-\title{Reproducibility Report Instructions for CSE 517}
+\title{SelfExplain Text Classifier Reproducibility Report}
 
 % The \author macro works with any number of authors. There are two commands
 % used to separate the names and addresses of multiple authors: \And and \AND.
@@ -37,7 +37,7 @@
 % \AND instead of \And before the third author name.
 
 \author{%
-  Murray Kang, Xuweiyi Chen, Hao Luo \\ % write a list of authors
+  Murray Kang,  Xuweiyi Chen,  Hao Luo \\ % write a list of authors
   University of Washington \\
  \texttt{\{haoqik, xuweic, author3\}@uw.edu} \\ % write your email
 }
@@ -75,7 +75,7 @@ We spent some extra time in order to follow the instructions from the paper.
 
 \subsection*{What was Difficult}
 
-[TODO] * Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatiablity of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
+[TODO] * Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatibility of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
 
 Describe which parts of your reproduction study were difficult or took much more time than you expected. Perhaps the data was not available and you couldn't verify some experiments, or the author's code was broken and had to be debugged first. Or, perhaps some experiments just take too much time/resources to run and you couldn't verify them. The purpose of this section is to indicate to the reader which parts of the original paper are either difficult to reuse, or require a significant amount of work and resources to verify. 
 
@@ -144,13 +144,19 @@ to attu if time permits.
 
 \subsection{Model Descriptions}
 
-SelfExplain is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. In the SelfExplain architecture, firstly, there is a transformer encoder that encoded the input and its relative non-terminals. Next, it used three layers after regularization to make prediction, a linear layer, a globally interpretable layer and a locally interpretable layer. In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. To be more specific, firstly, there is a concept store that contains all concepts in the training set, in which each candidate $q_k$ is represented by a mean pooled representation of its constituent words, $q_k = \frac{\sum_{w \in q_k}{e(w)}}{len(q_k)}  $. In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Since the model is a finetuned for downstream task, all candidate representation $q_k$ are re-indexed after every fixed number of steps. 
-Next, the model uses the Maximum Inner Product Search (MIPS) to retrieve the top $K$ influenced concepts ${q_k}_{1:K}$ from the concept store based on the cosine similarity function: 
+SelfExplain is a novel self-explaining model that explains a text classifier's predictions using phrase-based concepts. In the SelfExplain architecture, firstly, there is a transformer encoder that encoded the input and its relative non-terminals. After that, it used three layers after regularization to make prediction, a linear layer, a globally interpretable layer and a locally interpretable layer. \\
+In the globally interpretable layer, it aims to figure out the most influential concepts on the model's prediction in the training set for each data sample. To be more specific, firstly, there is a concept store that contains all concepts in the training set, in which each candidate $q_k$ is represented by a mean pooled representation of its constituent words. $$q_k = \frac{\sum_{w \in q_k}{e(w)}}{len(q_k)}  $$ Since the model is a finetuned for downstream task, all candidate representation $q_k$ are re-indexed after every fixed number of steps. 
+Next, the model used the Maximum Inner Product Search (MIPS) to retrieve the top $K$ influenced concepts ${q_k}_{1:K}$ from the concept store based on the cosine similarity function: 
 $$d(x, Q) = \frac{\mathbf{x} \cdot q}{ \|\mathbf{x}\| \|q\|}  \qquad  \forall q \in Q$$
 After identifying the influential concepts from the training data, the model learned it end-to-end via back propagation. Our inner product model for this globally interpretable layer is defined as follows:
 $$  p(q|\mathbf{x}_i) = \frac{exp(d(\mathbf{u}_\mathbb{S}, q))}{\sum_{q'} exp(d(\mathbf{u}_\mathbb{S}, q'))}$$
 
-Describe the models used in the original paper, including the architecture, learning objective and the number of parameters.
+In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Firstly, it computes a local relevance score for all input concepts from a sample. For each non-terminal $nt_j$, there is a score that qualifies the contribution of each $nt_j$ to the label and then the model compared it to the contribution of the root node $nt_\mathbb{s}$. Finally, it chose the phrases $\mathbf{C}_L$ that contributed most to explain the predictions locally. To be more specific, given a encoder, LIL computes the contribution from $nt_j$ to the final prediction, and then it built a representation of the input without contribution of phrase $nt_j$ and use it to score labels:
+$$t_j = g(\mathbf{u}_j) - g(\mathbf{u}_\mathbb{s})$$
+$$s_j = softmax(\mathbf{W_v} \times t_j + \mathbf{b}_v)$$
+where g is a $relu$ activation function, $t_j \in \mathbb{R}^D$, $s_j \in \mathbb{R}^C$, $\mathbf{W}_v \in \mathbb{R}^{D \times C}$, $s_j$ is a label distribution without the contribution of $nt_j$. \\
+Given this, the relevance score $\mathbf{r}_j$ is the given by the difference between the classifier score fore the predicted label based on entire input and the label score based on the input without $nt_j$:
+$$\mathbf{r}_j = (l_Y)_{i|i=P_c} - (s_j)_{i|i=P_c}$$
 
 \subsection{Datasets}
 
@@ -163,7 +169,7 @@ Describe how you set the hyperparameters and what was the source for their value
 
 \subsection{Implementation}
 
-Describe whether you use the existing code or write your own code, with the link to the code and which languange/packages were used. Note that the github repo you link should be public and have a clear documentation.
+We made some changes based on the the author's code. Also, we used different dataset (SST- 5) to re-implement the experiment mentioned in the paper. The original author's code link: https://github.com/dheerajrajagopal/SelfExplain
 
 \subsection{Experimental Setup}
 
