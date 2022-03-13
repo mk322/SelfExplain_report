@@ -174,6 +174,14 @@ We made some changes based on the the author's code. Also, we used different dat
 
 \subsection{Experimental Setup}
 
+***Github
+
+Following the paper, we used two different transformer encoders configurations as our base model: RoBERTa (Liu et al., 2019) - a robustly optimized version of BERT and XLNet (Yang et al., 2019) - a variant model based on Transformer-XL architecture. Then, we used the two encoders without the GIL and LIL layers as the baselines, and we generated parse tree to extract target concepts for the input. Also, we maintained the weights and hyperparameters from the pre-trained encoders, and fine-tuned the parameters on the GIL and LIL modules. 
+
+We experimented on two different numbers of global
+influential concepts K $= \{5, 10\}$, different transformer encoders, different combinations of layers used. We performed all experiments on two separated K-80 GPUs on Google Cloud Platform. 
+
+
 [TODO] Explain how you ran your experiments, e.g. the CPU/GPU resources and provide the link to your code and notebooks. 
 
 \subsection{Computational Requirements}
@@ -210,18 +218,21 @@ Give your judgment on whether  the evidence you got from your experiments suppor
 
 \subsection{What was Easy}
 
-[TODO] Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
-
-Tip: Be careful not to give sweeping generalizations. Something that is easy for you might be difficult to others. Put what was easy in context and explain why it was easy (e.g., code had extensive API documentation and a lot of examples that matched experiments in papers). 
+Thanks to authors' codes, which built up the foundation of the SelfExplain model, when we faced any confusion about the concepts mentioned in the paper, we can refer to the codes to deepen our understanding of the model. Also, the code style of the authors is clear and easy for us to understand the ideas of each part. Next, the dataset used in the experiments are easy to obtain since they are all open sources on the websites. In the training step, the authors used PyTorch lightning library to build the Trainer, and there were a lot of clear examples and API documentation which helped us better understand the structure of the codes.  
 
 \subsection{What was Difficult}
 
-[TODO] Describe which parts of your reproduction study were difficult or took much more time than you expected. Perhaps the data was not available and you couldn't verify some experiments, or the author's code was broken and had to be debugged first. Or, perhaps some experiments just take too much time/resources to run and you couldn't verify them. The purpose of this section is to indicate to the reader which parts of the original paper are either difficult to reuse, or require a significant amount of work and resources to verify. 
+We experienced several challenges when reproducing this paper. In the process of reading through the whole paper, there are some concepts and intuitive that are hard for us to understand. Using maximum inner product search (MIPS) to retrieve the top relevant K concepts from the concept store is one of them. Therefore, we had to read the paper of MIPS (Guu etal.), and found out the methodology and intuitive of it. The next one concerning the methodology of the paper is the reason of using regularization with the log-likelihood loss from LIL and GIL in training the linear classification layer. So, we read through the paper regarding the regularizing models with explanation losses to figure it out.(Melis and Jaakkola, 2018). 
 
-Tip: Be careful to put your discussion in context. For example, don't say ``the math was difficult to follow,'' say ``the math requires advanced knowledge of calculus to follow.'' 
+In terms of the difficulty of coding, there were still some challenges we faced. Firstly, the authors' codes were broken, and we had to fix it in the a couple of weeks. Also, we established two computing K-80 GPUs on Google Cloud Platform to train the models. Also, the codes for RoBERTa transformer is not completed, and there are few useful information we can find on the websites that are suitable to our case. Also, the authors cannot access to their original codes for RoBERTa. Thus, it took us many days to figure out how to use RoBERTa in the SelfExplain model by multiple searching and experiments.\\ 
 
 \subsection{Recommendations for Reproducibility}
 
+In terms of the concepts, ideas, and intuitive in the paper, We recommend that it would be better to read the paper (Melis and Jaakkola 2018 that discussed and proofed why regularizing models with explanation certain losses can improve interpretable models for local interpretability in the area of computer vision. The SelfExplain model smartly extended this idea for both global and local interpretable output for the classifier model, and showed the actual improvement of doing this. 
+
+Since there were many incompatibilities happened with the authors' code and our local Python interpreter, for the researchers who would use the author's code, in which some methods and packages are out-of-date, we recommend you need to install the same version of the packages used if possible. For those packages that the specific old version cannot be installed anyone, I recommend you can refer to our codes to revise them on your end. 
+
+Also, for the researchers who do not have access to any powerful computing GPU, we recommend you can use Google Cloud Platform to train the model, espcifally for the dataset of SST-2, which has 60,000 sentences, since it would took a relative long time. 
 [TODO] Describe a set of recommendations to the original authors or others who work in this area for improving reproducibility.
 
 \section*{Communication with Original Authors}
@@ -232,5 +243,4 @@ Tip: Be careful to put your discussion in context. For example, don't say ``the 
 \section*{References}
 
 [TODO] Use bibtex and check its output; manual corrections are often necessary.
-
 \end{document}
