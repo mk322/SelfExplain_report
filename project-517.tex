@@ -71,13 +71,11 @@ We spent some extra time in order to follow the instructions from the paper.
 
 \subsection*{What was Easy}
 
-[TODO] Describe which parts of your reproduction study were easy. E.g., was it easy to run the author's code, or easy to reimplement their method based on the description in the paper. The goal of this section is to summarize to the reader which parts of the original paper they could easily apply to their problem. 
+Since the code we used was based on the authors', it helped us better understand the structure and ideas of SelfExplain, as well as all the concepts mentioned in the paper. For the transformers we used in the implementation, there are some examples and documentations of the API we need to use, so it really helped a lot in solving several problems about the codes. In terms of the ideas of the paper, using interpretable layer to interpret a sentence is intuitive. For LIL layer, it is intuitive that we can use some key phrases (which are concepts in this paper) to summarize or represent one sentence, which is what the LIL layer does. For GIL layer, it is also not hard to understand that the goal of it is that we want to retrieve some of most relevant phrases that are seen or learned (in the training set) to represent or interpret a sentence.  
 
 \subsection*{What was Difficult}
 
-[TODO] * Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatibility of our PCs with the authors' code, we used 3 more days to revise and debug the original code to make it able to run on our end. In the authors' code, the test set of the original dataset they used is not preprocessed. To testify our result, we also preprocessed the test set of the original dataset and revised the original codes to figure out the results on test set.
-
-Describe which parts of your reproduction study were difficult or took much more time than you expected. Perhaps the data was not available and you couldn't verify some experiments, or the author's code was broken and had to be debugged first. Or, perhaps some experiments just take too much time/resources to run and you couldn't verify them. The purpose of this section is to indicate to the reader which parts of the original paper are either difficult to reuse, or require a significant amount of work and resources to verify. 
+Honestly, we faced many difficulties in the process of reproducing the experiment. Maybe due to the difference and incompatibility of our PCs with the authors' code, it took us many days to revise and debug the original code to make it able to run on our end. Also, there are few documentations and information that could help us change the transformer to RoBERTa on the Internet, which is needed for our additional experiment. In terms of the ideas of the paper, although the construction of the two interpretable layers is intuitive, the reason why and how the interpretable helps improve the performance of the classifier is still hard to understand.
 
 \subsection*{Communication with Original Authors}
 
