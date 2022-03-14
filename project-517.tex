@@ -39,7 +39,7 @@
 \author{%
   Murray Kang,  Xuweiyi Chen,  Hao Luo \\ % write a list of authors
   University of Washington \\
- \texttt{\{haoqik, xuweic, daniel66\}@uw.edu} \\ % write your email
+ \texttt{\{haoqik, xuweic, author3\}@uw.edu} \\ % write your email
 }
 
 \begin{document}
@@ -151,12 +151,33 @@ $$d(x, Q) = \frac{\mathbf{x} \cdot q}{ \|\mathbf{x}\| \|q\|}  \qquad  \forall q 
 After identifying the influential concepts from the training data, the model learned it end-to-end via back propagation. Our inner product model for this globally interpretable layer is defined as follows:
 $$  p(q|\mathbf{x}_i) = \frac{exp(d(\mathbf{u}_\mathbb{S}, q))}{\sum_{q'} exp(d(\mathbf{u}_\mathbb{S}, q'))}$$
 
-In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Firstly, it computes a local relevance score for all input concepts from a sample. For each non-terminal $nt_j$, there is a score that qualifies the contribution of each $nt_j$ to the label and then the model compared it to the contribution of the root node $nt_\mathbb{s}$. Finally, it chose the phrases $\mathbf{C}_L$ that contributed most to explain the predictions locally. To be more specific, given a encoder, LIL computes the contribution from $nt_j$ to the final prediction, and then it built a representation of the input without contribution of phrase $nt_j$ and use it to score labels:
+In the locally interpretable layer, it aims to calculate the relevance score of each input concept that is relative to the prediction to quantify the contributions. Firstly, it computes a local relevance score for all input concepts from a sample. For each non-terminal $nt_j$, there is a score that qualifies the contribution of each $nt_j$ to the label and then the model compared it to the contribution of the root node $nt_\mathbb{S}$. Finally, it chose the phrases $\mathcal{C}_L$ that contributed most to explain the predictions locally. To be more specific, given a encoder, LIL computes the contribution from $nt_j$ to the final prediction, and then it built a representation of the input without contribution of phrase $nt_j$ and use it to score labels:
 $$t_j = g(\mathbf{u}_j) - g(\mathbf{u}_\mathbb{S})$$
-$$s_j = softmax(\mathbf{W_v} \times t_j + \mathbf{b}_v)$$
+$$s_j = \textrm{softmax}(\mathbf{W}_v \times t_j + \mathbf{b}_v)$$
 where g is a $relu$ activation function, $t_j \in \mathbb{R}^D$, $s_j \in \mathbb{R}^C$, $\mathbf{W}_v \in \mathbb{R}^{D \times C}$, $s_j$ is a label distribution without the contribution of $nt_j$. \\
 Given this, the relevance score $\mathbf{r}_j$ is the given by the difference between the classifier score fore the predicted label based on entire input and the label score based on the input without $nt_j$:
 $$\mathbf{r}_j = (l_Y)_{i|i=P_c} - (s_j)_{i|i=P_c}$$
+
+[Training process]
+
+SelfExplain is trained to maximize the conditional log-likelihood of predicting the class at final layers: LIL, GIL and linear (for label prediction). It has been found that regularizing models with explanation specific losses improves inherently interpretable models for local interpretability (Melis and Jaakkola,
+2018). SelfExplain extends this idea for both global and local interpretable output for our classifier model, so we regularize the loss through GIL and LIL layers by optimizing their output for the end-task as well. 
+
+For the LIL layer, we use a weighted aggregated representation over $s_j$ and compute the log-likelihood loss as follows:
+$$l_L = \sum_{j, j \neq \mathbb{S}}{w_{sj} \times s_j}, w_{sj} \in \mathbb{R}$$
+and the overall loss of the whole training set is as follows:
+$$\mathcal{L}_L = - \sum_{c=1}^{C}{log(l_L)} \times {y_c}$$
+
+For the GIL layer, we firstly aggregate the scores over all the retrieved $q_{1:K}$ as a weighted sum, then pass it through an activation layer, a linear layer, and a softmax layer to compute the log-likelihood loss as follows:
+$$l_G = \textrm{softmax}(\mathbf{W}_u \times g(\sum_{k=1}^{K}{\mathbf{w}_k \times q_k}) + \textbf{b}_u)$$
+and where $\mathbf{W}_u \in \mathbb{R}^{D \times C}$, $\mathbf{w}_k \in \mathbb{R}$ and $g$ represents $relu$ activation function. Here, the global interpretable concepts are denoted by $\mathcal{C}_G = q_{1:K}$, and $l_G$ represents the softmax for the GIL layer. The overall loss of the whole training set is as follows:
+$$\mathcal{L}_G = - \sum_{c=1}^{C}{log(l_G)} \times {y_c}$$
+
+In the training process, we optimize for the following joint loss:
+$$\mathcal{L} = \alpha \times \mathcal{L}_G + \beta \times \mathcal{L}_L + \mathcal{L}_Y$$ 
+where $\mathcal{L}_Y = - \sum_{c=1}^{C}{log(l_Y)} \times {y_c}$ is the overall loss of the whole training set for the linear layer . Here, $\alpha$ is and $\beta$ are regularization hyper-parameters. All loss components use cross-entropy loss based on task label $y_c$.
+
+
 
 \subsection{Datasets}
 
@@ -165,8 +186,7 @@ benchmark and perform experiments for each of three claims we discussed in the s
 Scope of Reproducibility.
 
 \subsection{Hyperparameters}
-
-[TODO] Describe how you set the hyperparameters and what was the source for their value (e.g., paper, code, or your guess). 
+Describe how you set the hyperparameters and what was the source for their value (e.g., paper, code, or your guess). 
 
 \subsection{Implementation}
 
