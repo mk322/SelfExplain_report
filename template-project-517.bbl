@@ -1,0 +1,71 @@
+\begin{thebibliography}{10}
+
+\bibitem{10.5555/3327757.3327875}
+David Alvarez-Melis and Tommi~S. Jaakkola.
+\newblock Towards robust interpretability with self-explaining neural networks.
+\newblock In {\em Proceedings of the 32nd International Conference on Neural
+  Information Processing Systems}, NIPS'18, page 7786–7795, Red Hook, NY,
+  USA, 2018. Curran Associates Inc.
+
+\bibitem{DBLP:journals/corr/abs-1901-02860}
+Zihang Dai, Zhilin Yang, Yiming Yang, Jaime~G. Carbonell, Quoc~V. Le, and
+  Ruslan Salakhutdinov.
+\newblock Transformer-xl: Attentive language models beyond a fixed-length
+  context.
+\newblock {\em CoRR}, abs/1901.02860, 2019.
+
+\bibitem{falcon2019pytorch}
+William {Falcon et al.}
+\newblock Pytorch lightning.
+\newblock {\em GitHub. Note:
+  https://github.com/PyTorchLightning/pytorch-lightning}, 3, 2019.
+
+\bibitem{Guu2020REALMRL}
+Kelvin Guu, Kenton Lee, Zora Tung, Panupong Pasupat, and Ming-Wei Chang.
+\newblock Realm: Retrieval-augmented language model pre-training.
+\newblock {\em ArXiv}, abs/2002.08909, 2020.
+
+\bibitem{DBLP:journals/corr/abs-1907-11692}
+Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer
+  Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov.
+\newblock Roberta: {A} robustly optimized {BERT} pretraining approach.
+\newblock {\em CoRR}, abs/1907.11692, 2019.
+
+\bibitem{pang-lee-2005-seeing}
+Bo~Pang and Lillian Lee.
+\newblock Seeing stars: Exploiting class relationships for sentiment
+  categorization with respect to rating scales.
+\newblock In {\em Proceedings of the 43rd Annual Meeting of the Association for
+  Computational Linguistics ({ACL}{'}05)}, pages 115--124, Ann Arbor, Michigan,
+  June 2005. Association for Computational Linguistics.
+
+\bibitem{rajagopal-etal-2021-selfexplain}
+Dheeraj Rajagopal, Vidhisha Balachandran, Eduard~H Hovy, and Yulia Tsvetkov.
+\newblock {SELFEXPLAIN}: A self-explaining architecture for neural text
+  classifiers.
+\newblock In {\em Proceedings of the 2021 Conference on Empirical Methods in
+  Natural Language Processing}, pages 836--850, Online and Punta Cana,
+  Dominican Republic, November 2021. Association for Computational Linguistics.
+
+\bibitem{socher-etal-2013-recursive}
+Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher~D. Manning,
+  Andrew Ng, and Christopher Potts.
+\newblock Recursive deep models for semantic compositionality over a sentiment
+  treebank.
+\newblock In {\em Proceedings of the 2013 Conference on Empirical Methods in
+  Natural Language Processing}, pages 1631--1642, Seattle, Washington, USA,
+  October 2013. Association for Computational Linguistics.
+
+\bibitem{warstadt2018neural}
+Alex Warstadt, Amanpreet Singh, and Samuel~R Bowman.
+\newblock Neural network acceptability judgments.
+\newblock {\em arXiv preprint arXiv:1805.12471}, 2018.
+
+\bibitem{DBLP:journals/corr/abs-1906-08237}
+Zhilin Yang, Zihang Dai, Yiming Yang, Jaime~G. Carbonell, Ruslan Salakhutdinov,
+  and Quoc~V. Le.
+\newblock Xlnet: Generalized autoregressive pretraining for language
+  understanding.
+\newblock {\em CoRR}, abs/1906.08237, 2019.
+
+\end{thebibliography}
